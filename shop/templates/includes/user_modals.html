@@ -1,0 +1,29 @@
+<style>
+  .modal-content {
+    background-color: #212121
+  }
+</style>
+
+<div class="modal fade" tabindex="-1" id="Modal-DeleteUser-{{ user.id }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ user.username }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {{ form1.hidden_tag() }}
+                    <br>
+                    <h4 class="text-center">Удалить {{ user.username }}?</h4>
+                    <br>
+                    <input id="deleted_user" name="deleted_user" type="hidden" value="{{ user.username }}">
+                    {{ form1.submit(class="btn btn-outline-success btn-block") }}
+                    <br>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
-from shop.models import User
+from wtforms import StringField, PasswordField, SubmitField, IntegerField
+from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError, NumberRange
+from shop.models import User, Item
 
 
 class LoginForm(FlaskForm):
@@ -31,3 +31,20 @@ class RegisterForm(FlaskForm):
 
 class PurchaseItemForm(FlaskForm):
     submit = SubmitField(label="Купить")
+
+
+class DeleteUserForm(FlaskForm):
+    submit = SubmitField(label="Удалить")
+
+
+class AddItemForm(FlaskForm):
+    def validate_name(self, name_to_check):
+        item = Item.query.filter_by(name=name_to_check.data).first()
+        if item:
+            raise ValidationError("Данный item уже существует")
+
+    name = StringField(label='Item name:', validators=[Length(min=2, max=20), DataRequired()])
+    desc = StringField(label='Item description:', validators=[Length(min=2, max=20), DataRequired()])
+    size = StringField(label='Item size:', validators=[Length(min=1, max=20), DataRequired()])
+    price = IntegerField(label='Item price:', validators=[NumberRange(min=100), DataRequired()])
+    submit = SubmitField(label="Add")

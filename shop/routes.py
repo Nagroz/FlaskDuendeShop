@@ -1,6 +1,6 @@
 from shop import app
 from shop.models import Item, User
-from shop.forms import RegisterForm, LoginForm, PurchaseItemForm
+from shop.forms import RegisterForm, LoginForm, PurchaseItemForm, AddItemForm, DeleteUserForm
 from flask import render_template, redirect, url_for, flash, request
 from shop import db
 from flask_login import login_user, logout_user, login_required, current_user
@@ -67,3 +67,36 @@ def logout_page():
     logout_user()
     flash('Вы вышли из личного кабинета', category='info')
     return render_template('home.html')
+
+
+@app.route("/admin", methods=['GET', 'POST'])
+def admin_page():
+    form1 = DeleteUserForm()
+    form = AddItemForm()
+    users = User.query.filter_by()
+    if request.form.get('submit') == "Удалить":
+        if request.method == 'POST':
+            deleted_user = request.form.get('deleted_user')
+            d_user = User.query.filter_by(username=deleted_user).first()
+            if d_user:
+                if d_user == current_user:
+                    logout_user()
+                db.session.delete(d_user)
+                db.session.commit()
+                flash("Вы удалили пользователя", category='success')
+    if request.form.get('submit') == 'Add':
+        if form.validate_on_submit():
+            new_item = Item(name=form.name.data,
+                            desc=form.desc.data,
+                            size=form.size.data,
+                            price=form.price.data,
+                            owner=None
+                            )
+            db.session.add(new_item)
+            db.session.commit()
+            flash(f'Вы успешно добавили {new_item.name}!', category='success')
+            form = AddItemForm(formdata=None)
+        if form.errors:
+            for err_msg in form.errors.values():
+                flash(f"Ошибка добавления: {err_msg}", category='danger')
+    return render_template('admin.html', form=form, form1=form1, users=users)

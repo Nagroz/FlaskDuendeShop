@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}
+Admin Page
+{% endblock %}
+
+{% block content %}
+<body class="text-center">
+<div class="container">
+    <form method="post" class="form-group" style="color:white">
+        {{ form.hidden_tag() }}
+        <br><br>
+        <h1 class="h3 mb-3 font-weight-normal" align="center">
+            Add item to shop
+        </h1>
+
+        {{ form.name.label() }}
+        {{ form.name(class='form-control') }}
+
+        {{ form.desc.label() }}
+        {{ form.desc(class='form-control') }}
+
+        {{ form.size.label() }}
+        {{ form.size(class='form-control') }}
+
+        {{ form.price.label() }}
+        {{ form.price(class='form-control') }}
+
+        <br>
+        {{ form.submit(class='btn btn-lg btn-block btn-primary') }}
+        <br>
+        <div class="checkbox mb-3">
+        </div>
+    </form>
+    <table class="table table-hover table-dark">
+        <thead>
+        <tr>
+            <th scope="col">Имя пользователя</th>
+            <th scope="col">E-mail</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+        {% include 'includes/user_modals.html' %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+
+            <td>
+
+                <button class="btn btn-outline btn-danger" data-toggle="modal"
+                        data-target="#Modal-DeleteUser-{{ user.id }}">
+                    Удалить
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+
+{% endblock %}
